@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bench Press Percentile Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    .tab {
+      padding: 10px 20px;
+      border: 1px solid #ccc;
+      border-bottom: none;
+    }
+
+    .tab.active {
+      background: black;
+      color: white;
+    }
+
+    .tab-content {
+      border: 1px solid #ccc;
+      padding: 20px;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+    }
+
+    button {
+      background: black;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      white-space: pre-line;
+    }
+
+    .description {
+      margin-bottom: 20px;
+      font-size: 15px;
+      color: #333;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #555;
+      text-align: center;
+    }
+
+    h4 {
+      margin-top: 20px;
+    }
+
+    code {
+      display: block;
+      background: #f4f4f4;
+      padding: 10px;
+      margin: 10px 0;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Bench Press Percentile Calculator</h1>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('calc')">Calculator</div>
+  <div class="tab" onclick="showTab('method')">How it works</div>
+</div>
+
+<div id="calc" class="tab-content">
+  <p class="description">
+    A percentile shows how you compare to others. For example, being in the 70th percentile means you are stronger than 70% of people.
+  </p>
+
+  <label>Bodyweight (lbs)</label>
+  <input id="bodyweight" type="number">
+
+  <label>Bench Press 1RM (lbs)</label>
+  <input id="lift" type="number">
+
+  <label>Gender</label>
+  <select id="gender">
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+  </select>
+
+  <button id="calcBtn">Calculate Percentile</button>
+
+  <div id="result"></div>
+</div>
+
+<div id="method" class="tab-content" style="display:none;">
+
+  <h3>Full Methodology</h3>
+
+  <p>
+    This calculator estimates bench press percentiles by modeling the entire adult population as a combination
+    of lifters and non-lifters, then fitting a normal distribution to the resulting data.
+  </p>
+
+  <h4>1. Population Split</h4>
+  <p>
+    Based on CDC data:
+  </p>
+  <ul>
+    <li>35% of men lift weights regularly</li>
+    <li>25% of women lift weights regularly</li>
+  </ul>
+
+  <h4>2. Average Bench Press by Group</h4>
+  <ul>
+    <li>Non-lifters: Men = 119 lbs, Women = 55 lbs</li>
+    <li>Lifters: Men = 220 lbs, Women = 104 lbs</li>
+  </ul>
+
+  <h4>3. Weighted Population Average</h4>
+  <code>
+Men: 119 × 0.65 + 220 × 0.35 = 155 lbs  
+Women: 55 × 0.75 + 104 × 0.25 = 65 lbs
+  </code>
+
+  <h4>4. Average Bodyweight</h4>
+  <ul>
+    <li>Men: 190 lbs</li>
+    <li>Women: 160 lbs</li>
+  </ul>
+
+  <h4>5. Relative Strength (Lift ÷ Bodyweight)</h4>
+  <code>
+Men: 155 / 190 = 0.82  
+Women: 65 / 160 = 0.41
+  </code>
+
+  <h4>6. Bodyweight Standard Deviation</h4>
+  <p>
+    Estimated from NHANES percentiles using:
+  </p>
+  <code>
+SD ≈ (95th percentile − 5th percentile) / 3.29
+  </code>
+
+  <code>
+Men: (284 − 136) / 3.29 ≈ 45 lbs  
+Women: (263 − 110) / 3.29 ≈ 47 lbs
+  </code>
+
+  <h4>7. Non-Lifter Strength Variability</h4>
+  <code>
+Men: 0.82 × 45 ≈ 37 lbs  
+Women: 0.41 × 47 ≈ 19 lbs
+  </code>
+
+  <h4>8. Lifter Strength Variability</h4>
+  <p>
+    Derived from strength percentiles:
+  </p>
+  <code>
+Men: (370 − 119) / 3.29 ≈ 75 lbs  
+Women: (198 − 55) / 3.29 ≈ 43 lbs
+  </code>
+
+  <h4>9. Combined Standard Deviation</h4>
+  <code>
+Men: 37 × 0.65 + 75 × 0.35 ≈ 50 lbs  
+Women: 19 × 0.75 + 43 × 0.25 ≈ 25 lbs
+  </code>
+
+  <h4>10. Final Distributions</h4>
+  <ul>
+    <li>Men: mean = 155 lbs, std dev = 50 lbs</li>
+    <li>Women: mean = 65 lbs, std dev = 25 lbs</li>
+  </ul>
+
+  <h4>11. Relative Strength Distribution</h4>
+  <code>
+Men: std = 50 / 190 ≈ 0.26  
+Women: std = 25 / 160 ≈ 0.16
+  </code>
+
+  <h4>12. Percentile Calculation</h4>
+  <p>
+    Percentiles are computed using a normal distribution:
+  </p>
+  <code>
+z = (value − mean) / standard deviation  
+percentile = CDF(z)
+  </code>
+
+  <h4>Sources</h4>
+  <ul>
+    <li><a href="https://www.strengthlog.com/bench-press-strength-standards-lb" target="_blank">StrengthLog Bench Press Standards</a></li>
+    <li><a href="https://www.cdc.gov/mmwr/volumes/71/wr/mm7118a6.htm" target="_blank">CDC Strength Training Data</a></li>
+    <li><a href="https://dqydj.com/weight-percentile-calculator-men-women/" target="_blank">NHANES Weight Percentiles</a></li>
+  </ul>
+
+</div>
+
+<footer>
+  © 2026 Bench Press Calculator. This site provides general fitness estimates and is for informational purposes only.
+</footer>
+
+<script>
+function showTab(tab) {
+  document.getElementById("calc").style.display = tab === "calc" ? "block" : "none";
+  document.getElementById("method").style.display = tab === "method" ? "block" : "none";
+
+  var tabs = document.getElementsByClassName("tab");
+  for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove("active");
+
+  event.target.classList.add("active");
+}
+
+function normalCDF(x) {
+  return (1 + erf(x / Math.sqrt(2))) / 2;
+}
+
+function erf(x) {
+  var sign = (x >= 0) ? 1 : -1;
+  x = Math.abs(x);
+
+  var a1 =  0.254829592;
+  var a2 = -0.284496736;
+  var a3 =  1.421413741;
+  var a4 = -1.453152027;
+  var a5 =  1.061405429;
+  var p  =  0.3275911;
+
+  var t = 1.0 / (1.0 + p * x);
+  var y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+
+  return sign * y;
+}
+
+function formatPercent(p) {
+  p = Math.max(0.0001, Math.min(0.9999, p));
+  return (p * 100).toFixed(2);
+}
+
+document.getElementById("calcBtn").addEventListener("click", function () {
+
+  var bw = parseFloat(document.getElementById("bodyweight").value);
+  var lift = parseFloat(document.getElementById("lift").value);
+  var gender = document.getElementById("gender").value;
+
+  if (isNaN(bw) || isNaN(lift)) {
+    document.getElementById("result").innerText = "Please enter valid numbers.";
+    return;
+  }
+
+  var ratio = lift / bw;
+
+  var mean, std, ratioMean, ratioStd;
+
+  if (gender === "male") {
+    mean = 155;
+    std = 50;
+    ratioMean = 0.82;
+    ratioStd = 0.26;
+  } else {
+    mean = 65;
+    std = 25;
+    ratioMean = 0.41;
+    ratioStd = 0.16;
+  }
+
+  var rawPercentile = formatPercent(normalCDF((lift - mean) / std));
+  var ratioPercentile = formatPercent(normalCDF((ratio - ratioMean) / ratioStd));
+
+  var genderLabel = gender === "male" ? "men" : "women";
+
+  var output =
+    "Raw Strength: stronger than ~" + rawPercentile + "% of " + genderLabel + "\n" +
+    "Relative Strength: stronger than ~" + ratioPercentile + "% of " + genderLabel;
+
+  document.getElementById("result").innerText = output;
+
+});
+</script>
+
+</body>
+</html>
