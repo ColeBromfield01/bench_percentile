@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>The Math Behind It</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: Arial;
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 20px;
+  }
+
+  h4 {
+    margin-top: 20px;
+  }
+
+  pre {
+    display: block;
+    background: #f4f4f4;
+    padding: 10px;
+    margin: 10px 0;
+    white-space: pre-wrap;
+  }
+
+  footer {
+    margin-top: 40px;
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+  }
+</style>
+
+</head>
+
+<body>
+
+<h1>The Math Behind the Bench Press Percentile Calculator</h1>
+
+<h2>Full Methodology</h2>
+
+<p>
+This calculator estimates bench press percentiles by modeling the entire adult population as a combination
+of lifters and non-lifters, then fitting a normal distribution to the resulting data.
+</p>
+
+<h3>1. Population Split</h3>
+<p>Based on CDC data:</p>
+<ul>
+  <li>35% of men lift weights regularly</li>
+  <li>25% of women lift weights regularly</li>
+</ul>
+
+<h3>2. Average Bench Press by Group</h3>
+<ul>
+  <li>Non-lifters: Men = 119 lbs, Women = 55 lbs</li>
+  <li>Lifters: Men = 220 lbs, Women = 104 lbs</li>
+</ul>
+
+<h3>3. Weighted Population Average</h3>
+<pre>
+Men: 119 × 0.65 + 220 × 0.35 = 155 lbs  
+Women: 55 × 0.75 + 104 × 0.25 = 65 lbs
+</pre>
+
+<h3>4. Average Bodyweight</h3>
+<ul>
+  <li>Men: 190 lbs</li>
+  <li>Women: 160 lbs</li>
+</ul>
+
+<h3>5. Relative Strength (Lift ÷ Bodyweight)</h3>
+<pre>
+Men: 155 / 190 = 0.82  
+Women: 65 / 160 = 0.41
+</pre>
+
+<h3>6. Bodyweight Standard Deviation</h3>
+<p>Estimated from NHANES percentiles using:</p>
+<pre>
+SD ≈ (95th percentile − 5th percentile) / 3.29
+</pre>
+
+<pre>
+Men: (284 − 136) / 3.29 ≈ 45 lbs  
+Women: (263 − 110) / 3.29 ≈ 47 lbs
+</pre>
+
+<h3>7. Non-Lifter Strength Variability</h3>
+<pre>
+Men: 0.82 × 45 ≈ 37 lbs  
+Women: 0.41 × 47 ≈ 19 lbs
+</pre>
+
+<h3>8. Lifter Strength Variability</h3>
+<p>Derived from strength percentiles:</p>
+<pre>
+Men: (370 − 119) / 3.29 ≈ 75 lbs  
+Women: (198 − 55) / 3.29 ≈ 43 lbs
+</pre>
+
+<h3>9. Combined Standard Deviation</h3>
+<pre>
+Men: 37 × 0.65 + 75 × 0.35 ≈ 50 lbs  
+Women: 19 × 0.75 + 43 × 0.25 ≈ 25 lbs
+</pre>
+
+<h3>10. Final Distributions</h3>
+<ul>
+  <li>Men: mean = 155 lbs, std dev = 50 lbs</li>
+  <li>Women: mean = 65 lbs, std dev = 25 lbs</li>
+</ul>
+
+<h3>11. Relative Strength Distribution</h3>
+<pre>
+Men: std = 50 / 190 ≈ 0.26  
+Women: std = 25 / 160 ≈ 0.16
+</pre>
+
+<h3>12. Percentile Calculation</h3>
+<p>Percentiles are computed using a normal distribution:</p>
+<pre>
+z = (value − mean) / standard deviation  
+percentile = CDF(z)
+</pre>
+
+<h3>Sources</h3>
+<ul>
+  <li><a href="https://www.strengthlog.com/bench-press-strength-standards-lb" target="_blank">StrengthLog Bench Press Standards</a></li>
+  <li><a href="https://www.cdc.gov/mmwr/volumes/71/wr/mm7118a6.htm" target="_blank">CDC Strength Training Data</a></li>
+  <li><a href="https://dqydj.com/weight-percentile-calculator-men-women/" target="_blank">NHANES Weight Percentiles</a></li>
+</ul>
+
+<footer>
+  <p><a href="/">Back to Calculator</a></p>
+  <p>© 2026 Bench Press Calculator. This site provides general fitness estimates and is for informational purposes only.</p>
+</footer>
+
+</body>
+</html>
